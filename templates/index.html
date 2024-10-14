@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>投票系统</title>
+</head>
+<body>
+    <div class="container">
+        <h1>投票系统</h1>
+        
+        <!-- 注册表单 -->
+        <form method="post" action="{{ url_for('index') }}">
+            <div class="form-group">
+                <label for="register_voter_id">注册用户</label>
+                <input type="text" name="voter_id" id="register_voter_id" required>
+                <button type="submit" name="register">注册</button>
+            </div>
+        </form>
+
+        <!-- 投票表单 -->
+        <form method="post" action="{{ url_for('index') }}">
+            <div class="form-group">
+                <label for="voter">投票者</label>
+                <input type="text" name="voter" id="voter" required>
+        
+                <label for="candidate">得票者</label>
+                <input type="text" name="candidate" id="candidate" required>
+        
+                <!-- 添加密钥输入框 -->
+                <label for="private_key_d">私钥 d</label>
+                <input type="text" name="private_key_d" id="private_key_d" required>
+        
+                <label for="private_key_n">模数 n</label>
+                <input type="text" name="private_key_n" id="private_key_n" required>
+        
+                <button type="submit" name="vote">投票</button>
+            </div>
+        </form>
+        <script>
+            // 当点击注册按钮后，自动将私钥填充到前端表单
+            function fillKeys(d, n) {
+        document.getElementById('private_key_d').value = d;
+        document.getElementById('private_key_n').value = n;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var d = "{{ d }}";
+        var n = "{{ n }}";
+        if (d && n) {
+            fillKeys(d, n);  // 自动填充私钥
+        }
+    });
+        </script>
+
+        <a href="{{ url_for('results') }}">查看投票结果</a>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
